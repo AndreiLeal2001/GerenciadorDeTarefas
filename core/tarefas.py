@@ -1,6 +1,4 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QTextEdit, QMessageBox
-from core.tarefas import GerenciadorDeTarefas
- 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -42,8 +40,11 @@ class MainWindow(QMainWindow):
         self.input_descricao.clear()
 
     def listar_tarefas(self):
-        tarefas = self.gerenciador.listar_tarefas()
-        self.output.append(''.join(tarefas))
+        tarefas_formatadas = []
+        for t in self.tarefas:
+            concluida = t.get("concluida", False)
+            tarefas_formatadas.append(f'{"[X]" if concluida else "[ ]"} {t["descricao"]}')
+        return tarefas_formatadas
 
     def excluir_tarefa(self, descricao):
         confirmacao = QMessageBox.question(self, 'Confirmação', f'Tem certeza que deseja excluir a tarefa "{descricao}"?',
@@ -123,15 +124,19 @@ class GerenciadorDeTarefas:
             logger.error(f'Erro ao carregar tarefas: {e}')
             self.tarefas = []
 
-    def adicionar_tarefa(self, descricao):
+    def adicionar_tarefa(self, descricao, data=None):
         try:
             if not descricao:
                 raise ValueError('Descrição da tarefa não pode ser vazia.')
-            self.tarefas.append({'descricao': descricao, 'concluida': False})
+            tarefa = {
+            'descricao': descricao,
+            'concluida': False
+            }
+            if data:
+                tarefa['data'] = data
+            self.tarefas.append(tarefa)
             salvar_tarefas(self.tarefas)
             logger.info(f'Tarefa adicionada: {descricao}')
-        except ValueError as ve:
-            logger.warning(f'Tentativa de adicionar tarefa inválida: {ve}')
         except Exception as e:
             logger.error(f'Erro ao adicionar tarefa: {e}')
 
