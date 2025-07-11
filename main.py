@@ -8,6 +8,7 @@ def exibir_menu():
     print("2 - Adicionar tarefa")
     print("3 - Concluir tarefa")
     print("4 - Excluir tarefa")
+    print("5 - Editar tarefa")
     print("0 - Sair")
 
 def executar():
@@ -35,6 +36,15 @@ def executar():
                 gestor.excluir_tarefa(indice)
             except ValueError:
                 print("Digite um número válido.")
+        
+        elif opcao == "5":
+            try:
+                indice = int(input("Índice da tarefa que deseja editar:"))
+                nova_descricao = input("Nova descrição da tarefa: ")
+                gestor.editar_tarefa(indice, nova_descricao)
+            except ValueError:
+                print("Digite um número válido.")
+        
         elif opcao == "0":
             print("Encerrando programa...")
             break

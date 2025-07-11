@@ -41,6 +41,21 @@ class GerenciadorDeTarefas:
         else:
             print("Essa tarefa não existe.")
 
+    def editar_tarefa(self, indice, nova_descricao):
+        """
+        Atualiza a descrição de uma tarefa existente.
+        Parâmetros:
+            - indice (int) - Posição da tarefa(començando em 1).
+            - nova_descrição(str) - Texto atualizado para a tarefa.
+        """
+        indice -= 1 # Ajusta para índice interno da lista
+        if 0 <= indice < len(self.tarefas):
+            self.tarefas[indice]["descrição"] = nova_descricao
+            salvar_tarefas(self.tarefas) #Atualiza o arquivo com as tarefas
+            print("Tarefa atualizada!")
+        else:
+            print("Índice inválido. Não foi possível atualizar a tarefa.")
+
     def excluir_tarefa(self, indice):
         """
         Remove uma tarefa da lista.
