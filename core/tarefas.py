@@ -1,8 +1,8 @@
-from GerenciadorDeTarefas.core.storage import salvar_tarefas, carregar_tarefas
-from GerenciadorDeTarefas.core.utils import logger
+from core.storage import salvar_tarefas, carregar_tarefas
+from core.utils import logger
 
 
-class Gerenciador_De_Tarefas:
+class GerenciadorDeTarefas:
     """
     Classe responsável por gerenciar uma lista de tarefas.
     Cada tarefa é representada como um dicionário com:
