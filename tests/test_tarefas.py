@@ -1,5 +1,5 @@
 # test_tarefas.py
-from tarefas import GerenciadorDeTarefas
+from GerenciadorDeTarefas.core.tarefas import GerenciadorDeTarefas
 
 def test_listar_tarefas(capsys):
     gestor = GerenciadorDeTarefas()

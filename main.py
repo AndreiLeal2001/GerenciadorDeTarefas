@@ -1,4 +1,4 @@
-from tarefas import GerenciadorDeTarefas
+from GerenciadorDeTarefas.core.tarefas import GerenciadorDeTarefas
 
 
 def exibir_menu():

@@ -1,5 +1,5 @@
-from storage import salvar_tarefas, carregar_tarefas
-from utils import logger
+from GerenciadorDeTarefas.core.storage import salvar_tarefas, carregar_tarefas
+from GerenciadorDeTarefas.core.utils import logger
 
 
 class GerenciadorDeTarefas:
