@@ -1,6 +1,20 @@
 # test_tarefas.py
 from tarefas import GerenciadorDeTarefas
 
+def test_listar_tarefas(capsys):
+    gestor = GerenciadorDeTarefas()
+    gestor.tarefas = [
+        {"descrição": "Estudar", "Concluída": False},
+        {"descrição": "Revisar código", "Concluída": True}
+    ]
+
+    gestor.listar_tarefas()
+    output = capsys.readouterr().out
+
+    assert "1. Estudar [❌ Pendente]" in output
+    assert "2. Revisar código [✅ Concluída]" in output
+
+
 def test_adicionar_tarefa():
     gestor = GerenciadorDeTarefas()
     gestor.tarefas = []  # limpando para teste isolado
@@ -17,14 +31,29 @@ def test_concluir_tarefa():
     
     assert gestor.tarefas[0]["Concluída"] is True
 
-def test_excluir_tarefa():
+def test_excluir_tarefa(monkeypatch):
     gestor = GerenciadorDeTarefas()
-    gestor.tarefas = [{"descrição": "Excluir", "Concluída": False}]
+    gestor.tarefas = [{"descrição": "Apagar", "Concluída": False}]
+
+    monkeypatch.setattr("builtins.input", lambda _: "s")  # Simula confirmação
     gestor.excluir_tarefa(1)
-    
+
     assert len(gestor.tarefas) == 0
+
     
 def test_editar_tarefa():
     gestor = GerenciadorDeTarefas()
     gestor.tarefas = [{"descrição": "Tarefa antiga", "Concluída": False}]
+    
+from tarefas import GerenciadorDeTarefas
+
+def test_concluir_tarefa(monkeypatch):
+    gestor = GerenciadorDeTarefas()
+    gestor.tarefas = [{"descrição": "Exemplo", "Concluída": False}]
+    
+    monkeypatch.setattr("builtins.input", lambda _: "s")  # Simula confirmação "s"
+    
+    gestor.concluir_tarefa(1)
+    assert gestor.tarefas[0]["Concluída"] is True
+
     

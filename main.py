@@ -22,20 +22,35 @@ def executar():
         if opcao == "1":
             gestor.listar_tarefas()
         elif opcao == "2":
-            descricao = input("Descrição da tarefa: ")
-            gestor.adicionar_tarefa(descricao)
+            descricao = input("Digite a descrição da tarefa:\n(ou 'cancelar', 'voltar', 'sair', '0' para desistir)\n> ").strip()
+
+        # Cancelamento direto
+            if descricao.lower() in ["cancelar", "voltar", "sair", "0"]:
+                print("❌ Criação cancelada. Voltando ao menu principal...")
+            elif descricao == "":
+                print("⚠️ Você não digitou nenhuma descrição.")
+            else:
+                # Confirmação antes de salvar
+                confirmacao = input(f"Você deseja salvar a tarefa: \"{descricao}\"? (s/n)\n> ").strip().lower()
+            if confirmacao == "s":
+                gestor.adicionar_tarefa(descricao.capitalize())
+            else:
+                print("🚫 Tarefa não foi criada. Retornando ao menu...")
+    
         elif opcao == "3":
             try:
-                indice = int(input("Índice da tarefa para concluir: "))
+                indice = int(input("Digite o número da tarefa que deseja concluir: "))
                 gestor.concluir_tarefa(indice)
             except ValueError:
-                print("Digite um número válido.")
+                    print("⚠️ Por favor, digite um número válido.")
+
         elif opcao == "4":
             try:
-                indice = int(input("Índice da tarefa para excluir: "))
+                indice = int(input("Digite o número da tarefa que deseja excluir: "))
                 gestor.excluir_tarefa(indice)
             except ValueError:
-                print("Digite um número válido.")
+                print("⚠️ Por favor, digite um número válido.")
+
         
         elif opcao == "5":
             try:
