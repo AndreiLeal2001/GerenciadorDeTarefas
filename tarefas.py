@@ -1,3 +1,5 @@
+from storage import salvar_tarefas, carregar_tarefas
+
 class GerenciadorDeTarefas:
     """
     Classe responsável por gerenciar uma lista de tarefas.
@@ -8,7 +10,7 @@ class GerenciadorDeTarefas:
 
     def __init__(self):
         """Inicializa a lista de tarefas vazia."""
-        self.tarefas = []
+        self.tarefas = carregar_tarefas
 
     def listar_tarefas(self):
         """Exibe todas as tarefas cadastradas, com status de conclusão."""
@@ -23,6 +25,7 @@ class GerenciadorDeTarefas:
     def adicionar_tarefa(self, descricao):
         """Adiciona uma nova tarefa à lista."""
         self.tarefas.append({"descrição": descricao, "Concluída": False})
+        salvar_tarefas(self.tarefas)
         print("Tarefa adicionada!")
 
     def concluir_tarefa(self, indice):
@@ -33,6 +36,7 @@ class GerenciadorDeTarefas:
         indice -= 1
         if 0 <= indice < len(self.tarefas):
             self.tarefas[indice]["Concluída"] = True
+            salvar_tarefas(self.tarefas)
             print("Tarefa concluída!")
         else:
             print("Essa tarefa não existe.")
@@ -45,6 +49,7 @@ class GerenciadorDeTarefas:
         indice -= 1
         if 0 <= indice < len(self.tarefas):
             del self.tarefas[indice]
+            salvar_tarefas(self.tarefas)
             print("Tarefa excluída!")
         else:
             print("Índice inválido.")
