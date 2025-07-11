@@ -31,6 +31,26 @@ class GerenciadorDeTarefas:
             except AttributeError:
                 print(f"{i}. ❌ ERRO: formato inesperado de tarefa.")
 
+    def buscar_tarefa(self, palavra_chave):
+        """
+        Exibe tarefas que contenham a palavra-chave fornecida.
+        Parâmetro:
+        - Palavra_chave (str): termo a ser pesquisado na descrição.
+        """
+        termo = palavra_chave.strip().lower()
+        if not termo:
+            print("⚠️ Nenhuma palavra-chave foi fornecida.")
+            return
+        
+        resultados = [
+            (i + 1, tarefa) for i, tarefa in enumerate(self.tarefas) if termo in tarefa.get("descrição", "").lower()
+        ]
+        
+        if resultados:
+            print(f"\n🔍 Resultados para \"{palavra_chave}\":")
+            for i, tarefa in resultados:
+                status = "✅ Concluída" if tarefa.get("Concluída", False) else "❌ Pendente"
+                print(f"{i}. {tarefa['descrição']} [{status}]")
 
     def adicionar_tarefa(self, descricao):
         """Adiciona uma nova tarefa à lista."""

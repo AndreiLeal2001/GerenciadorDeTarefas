@@ -59,5 +59,21 @@ def test_concluir_tarefa(monkeypatch):
     
     gestor.concluir_tarefa(1)
     assert gestor.tarefas[0]["Concluída"] is True
+    
+def test_buscar_tarefas(capsys):
+    gestor = GerenciadorDeTarefas()
+    gestor.tarefas = [
+        {"descrição": "Estudar Python", "Concluída": False},
+        {"descrição": "Revisar projeto", "Concluída": True},
+        {"descrição": "Estudar matemática", "Concluída": False}
+    ]
+
+    gestor.buscar_tarefas("estudar")
+    output = capsys.readouterr().out
+
+    assert "1. Estudar Python" in output
+    assert "3. Estudar matemática" in output
+    assert "2. Revisar projeto" not in output
+
 
     

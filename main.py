@@ -9,6 +9,7 @@ def exibir_menu():
     print("3 - Concluir tarefa")
     print("4 - Excluir tarefa")
     print("5 - Editar tarefa")
+    print("6 - Buscar tarefa por palavra-chave")
     print("0 - Sair")
 
 def executar():
@@ -64,6 +65,10 @@ def executar():
                     gestor.editar_tarefa(indice, nova.capitalize())
             except ValueError:
                 print("⚠️ Por favor, insira um número válido.")
+        elif opcao == "6":
+            termo = input("Digite uma palavra para buscar nas tarefas: ").strip()
+            gestor.buscar_tarefas(termo)
+
 
 
 if __name__ == "__main__":
