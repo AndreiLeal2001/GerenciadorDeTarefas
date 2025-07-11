@@ -33,7 +33,7 @@ class GerenciadorDeTarefas:
             except AttributeError:
                 print(f"{i}. ❌ ERRO: formato inesperado de tarefa.")
 
-    def buscar_tarefa(self, palavra_chave):
+    def buscar_tarefas(self, palavra_chave):
         """
         Exibe tarefas que contenham a palavra-chave fornecida.
         Parâmetro:
