@@ -76,22 +76,11 @@ Persistência com JSON
 
 Validação de entrada e tratamento de exceções
 
-Documentação com docstrings
-
 Testes automatizados com pytest
 
 Organização de projeto estilo backend profissional
 
-🧭 Próximos passos (roadmap)
-Exportar tarefas para .txt ou .csv
-
 Interface gráfica com Tkinter
 
-API REST com Flask ou FastAPI
-
-Autenticação de usuários
-
-Integração com banco de dados (sqlite, PostgreSQL)
-
 👨‍💻 Autor
-Desenvolvido por Andrei, como projeto pessoal e estudo de backend com Python.
+Desenvolvido por Andrei Leal, como projeto pessoal e estudo de backend com Python.
