@@ -1,4 +1,6 @@
 from storage import salvar_tarefas, carregar_tarefas
+from utils import logger
+
 
 class GerenciadorDeTarefas:
     """
@@ -56,7 +58,8 @@ class GerenciadorDeTarefas:
         """Adiciona uma nova tarefa à lista."""
         self.tarefas.append({"descrição": descricao, "Concluída": False})
         salvar_tarefas(self.tarefas)
-        print("Tarefa adicionada!")
+        logger.info("Nova tarefa adicionada: %s", descricao)
+        print("✅ Tarefa adicionada!")
 
     def concluir_tarefa(self, indice):
         """
