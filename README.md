@@ -33,7 +33,6 @@ gerenciador_de_tarefas/      ← Diretório principal do projeto
 ├── test_tarefas.py          ← (Opcional) Testes unitários usando pytest
 └── README.md                ← Documentação do projeto (este arquivo)
 
-
 📌 Aprendizados aplicados
 Organização de código em módulos
 
