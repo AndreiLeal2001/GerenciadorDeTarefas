@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QTextEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QTextEdit, QMessageBox
 from core.tarefas import GerenciadorDeTarefas
-
+ 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -44,6 +44,39 @@ class MainWindow(QMainWindow):
     def listar_tarefas(self):
         tarefas = self.gerenciador.listar_tarefas()
         self.output.append(''.join(tarefas))
+
+    def excluir_tarefa(self, descricao):
+        confirmacao = QMessageBox.question(self, 'Confirmação', f'Tem certeza que deseja excluir a tarefa "{descricao}"?',
+                                           QMessageBox.Yes | QMessageBox.No)
+        if confirmacao == QMessageBox.Yes:
+            self.gerenciador.excluir_tarefa(descricao)
+            self.output.append(f'Tarefa "{descricao}" excluída!')
+        else:
+            self.output.append(f'Exclusão de tarefa cancelada: "{descricao}".')
+
+    def concluir_tarefa(self, descricao):
+        try:
+            self.gerenciador.concluir_tarefa(descricao)
+            self.output.append(f'Tarefa "{descricao}" concluída!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Erro', f'Erro ao concluir tarefa: {e}')
+
+    def editar_tarefa(self, descricao_antiga, descricao_nova):
+        try:
+            self.gerenciador.editar_tarefa(descricao_antiga, descricao_nova)
+            self.output.append(f'Tarefa "{descricao_antiga}" editada para "{descricao_nova}"!')
+        except Exception as e:
+            QMessageBox.critical(self, 'Erro', f'Erro ao editar tarefa: {e}')
+
+    def buscar_tarefa(self, palavra_chave):
+        try:
+            resultados = self.gerenciador.buscar_tarefa(palavra_chave)
+            if resultados:
+                self.output.append(f'Resultados da busca por "{palavra_chave}": ' + ''.join([t['descricao'] for t in resultados]))
+            else:
+                self.output.append(f'Nenhuma tarefa encontrada para a palavra-chave: "{palavra_chave}".')
+        except Exception as e:
+            QMessageBox.critical(self, 'Erro', f'Erro ao buscar tarefa: {e}')
 
 if __name__ == '__main__':
     app = QApplication([])
@@ -140,10 +173,6 @@ class GerenciadorDeTarefas:
 
     def excluir_tarefa(self, descricao):
         try:
-            confirmacao = input(f'Tem certeza que deseja excluir a tarefa "{descricao}"? (s/n): ').strip().lower()
-            if confirmacao != 's':
-                logger.info(f'Exclusão de tarefa cancelada pelo usuário: {descricao}')
-                return
             self.tarefas = [t for t in self.tarefas if t['descricao'] != descricao]
             salvar_tarefas(self.tarefas)
             logger.info(f'Tarefa excluída: {descricao}')
