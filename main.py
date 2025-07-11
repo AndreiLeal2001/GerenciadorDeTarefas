@@ -1,4 +1,4 @@
-from GerenciadorDeTarefas.core.tarefas import GerenciadorDeTarefas
+from GerenciadorDeTarefas.core.tarefas import Gerenciador_De_Tarefas
 
 
 def exibir_menu():
@@ -14,7 +14,7 @@ def exibir_menu():
 
 def executar():
     """Função principal que executa o menu e coordena as ações."""
-    gestor = GerenciadorDeTarefas()
+    gestor = Gerenciador_De_Tarefas()
 
     while True:
         exibir_menu()
