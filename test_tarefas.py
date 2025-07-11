@@ -23,3 +23,8 @@ def test_excluir_tarefa():
     gestor.excluir_tarefa(1)
     
     assert len(gestor.tarefas) == 0
+    
+def test_editar_tarefa():
+    gestor = GerenciadorDeTarefas()
+    gestor.tarefas = [{"descrição": "Tarefa antiga", "Concluída": False}]
+    
