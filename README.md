@@ -1,12 +1,12 @@
 # 🧠 Gerenciador de Tarefas (Python CLI)
 
-Este é um projeto simples e funcional de **Gerenciador de Tarefas** criado com **Python puro**, utilizando a interface de linha de comando (CLI). Ele serve como ferramenta de organização pessoal e também como exercício de prática para quem está desenvolvendo habilidades em programação backend com Python.
+Este projeto é um **Gerenciador de Tarefas em Python puro**, com interface de linha de comando (CLI). Ele foi desenvolvido com foco em boas práticas de programação backend: modularização, persistência de dados, testes automatizados e organização profissional. Ideal para incluir em portfólios ou como ponto de partida para projetos mais avançados.
 
 ---
 
 ## 🎯 Objetivo
 
-Permitir ao usuário cadastrar, listar, concluir e excluir tarefas diretamente via terminal, com uma estrutura clara e separada em módulos para promover boas práticas de desenvolvimento e reutilização de código.
+Permitir ao usuário adicionar, listar, concluir e excluir tarefas diretamente via terminal, com salvamento automático em arquivo `.json`.
 
 ---
 
@@ -16,35 +16,82 @@ Permitir ao usuário cadastrar, listar, concluir e excluir tarefas diretamente v
 - 📋 Listar tarefas com status de conclusão
 - ✔️ Concluir tarefas específicas
 - 🗑️ Excluir tarefas pelo índice
-- 🧱 Estrutura modular com boa legibilidade
-- 🧪 Preparado para testes unitários com `pytest`
-- 🔍 Comentado e documentado para facilitar compreensão
+- 💾 Salvamento automático das tarefas
+- ⬆️ Carregamento imediato de tarefas salvas ao iniciar o programa
+- 🧱 Código modular e comentado
+- 🧪 Suporte a testes unitários com `pytest`
 
 ---
 
-## 📂 Estrutura do Projeto
+## 📦 Estrutura do Projeto
 
-gerenciador_de_tarefas/      ← Diretório principal do projeto
-├── main.py                  ← Arquivo que inicia o programa e exibe o menu
-├── tarefas.py               ← Módulo com a classe GerenciadorDeTarefas e sua lógica
-├── utils.py                 ← (Opcional) Funções auxiliares como validações
-├── storage.py               ← (Opcional) Funções para salvar/carregar tarefas em JSON
-├── tarefas.json             ← (Opcional) Arquivo de armazenamento de tarefas
-├── test_tarefas.py          ← (Opcional) Testes unitários usando pytest
-└── README.md                ← Documentação do projeto (este arquivo)
+```plaintext
+gerenciador_de_tarefas/
+├── main.py               ← Executa o programa e mostra o menu
+├── tarefas.py            ← Classe principal com a lógica do gerenciador
+├── storage.py            ← Módulo para salvar/carregar tarefas com JSON
+├── test_tarefas.py       ← Arquivo de testes usando pytest
+├── tarefas.json          ← Arquivo local de tarefas salvas (ignorado no GitHub)
+├── README.md             ← Este arquivo de documentação
+├── .gitignore            ← Arquivos que não devem ser versionados
+└── .gitattributes        ← Controle de formatação e linguagem no Git
+
+💾 Persistência de Dados
+O sistema salva automaticamente todas as tarefas em tarefas.json sempre que são adicionadas, concluídas ou excluídas.
+
+As tarefas são carregadas automaticamente ao iniciar o software.
+
+O sistema ignora o arquivo no repositório (está no .gitignore) para manter privacidade.
+
+Funções como salvar_tarefas() e carregar_tarefas() estão no módulo storage.py.
+
+🧪 Testes automatizados
+Com pytest, você pode verificar se os métodos principais estão funcionando corretamente:
+pip install pytest
+pytest test_tarefas.py
+
+🧱 Ambiente virtual (venv)
+Você pode criar um ambiente isolado para instalar dependências:
+python -m venv venv
+source venv/bin/activate     # Linux/macOS
+venv\Scripts\activate        # Windows
+
+Instale os pacotes: pip install pytest
+E registre as dependências: pip freeze > requirements.txt
+
+🚀 Como executar
+Clone o repositório:
+git clone https://github.com/seu-usuario/gerenciador-de-tarefas.git
+cd gerenciador-de-tarefas
+
+Ative o ambiente virtual (veja instruções acima)
+python main.py
 
 📌 Aprendizados aplicados
-Organização de código em módulos
+Programação orientada a objetos com Python
 
-Programação orientada a objetos
+Separação de código em módulos
 
-Manipulação de listas e dicionários
+Persistência com JSON
 
-Validação de entradas do usuário
+Validação de entrada e tratamento de exceções
 
-Escrever testes automatizados com pytest
+Documentação com docstrings
 
-Uso de docstring para documentação de funções
+Testes automatizados com pytest
+
+Organização de projeto estilo backend profissional
+
+🧭 Próximos passos (roadmap)
+Exportar tarefas para .txt ou .csv
+
+Interface gráfica com Tkinter
+
+API REST com Flask ou FastAPI
+
+Autenticação de usuários
+
+Integração com banco de dados (sqlite, PostgreSQL)
 
 👨‍💻 Autor
-Desenvolvido por Andrei, em processo de evolução e prática da linguagem Python e da lógica de programação.
+Desenvolvido por Andrei, como projeto pessoal e estudo de backend com Python.
