@@ -10,7 +10,7 @@ class GerenciadorDeTarefas:
 
     def __init__(self):
         """Inicializa a lista de tarefas vazia."""
-        self.tarefas = carregar_tarefas
+        self.tarefas = carregar_tarefas()
 
     def listar_tarefas(self):
         """Exibe todas as tarefas cadastradas, com status de conclusão."""

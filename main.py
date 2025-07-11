@@ -1,5 +1,6 @@
 from tarefas import GerenciadorDeTarefas
 
+
 def exibir_menu():
     """Exibe o menu de opções para o usuário."""
     print("\n--- MENU ---")
