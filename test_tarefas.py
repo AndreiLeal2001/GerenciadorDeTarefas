@@ -41,11 +41,15 @@ def test_excluir_tarefa(monkeypatch):
     assert len(gestor.tarefas) == 0
 
     
-def test_editar_tarefa():
+def test_editar_tarefa(monkeypatch):
     gestor = GerenciadorDeTarefas()
-    gestor.tarefas = [{"descrição": "Tarefa antiga", "Concluída": False}]
-    
-from tarefas import GerenciadorDeTarefas
+    gestor.tarefas = [{"descrição": "Antiga", "Concluída": False}]
+
+    monkeypatch.setattr("builtins.input", lambda _: "s")  # Simula confirmação
+    gestor.editar_tarefa(1, "Atualizada")
+
+    assert gestor.tarefas[0]["descrição"] == "Atualizada"
+
 
 def test_concluir_tarefa(monkeypatch):
     gestor = GerenciadorDeTarefas()

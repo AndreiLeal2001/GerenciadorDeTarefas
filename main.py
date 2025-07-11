@@ -54,17 +54,17 @@ def executar():
         
         elif opcao == "5":
             try:
-                indice = int(input("Índice da tarefa que deseja editar:"))
-                nova_descricao = input("Nova descrição da tarefa: ")
-                gestor.editar_tarefa(indice, nova_descricao)
+                indice = int(input("Número da tarefa que deseja editar: "))
+                nova = input("Nova descrição (ou digite 'cancelar' para voltar): ").strip()
+                if nova.lower() in ["cancelar", "sair", "0"]:
+                    print("🚫 Edição cancelada pelo usuário.")
+                elif nova == "":
+                    print("⚠️ Nenhuma descrição foi digitada.")
+                else:
+                    gestor.editar_tarefa(indice, nova.capitalize())
             except ValueError:
-                print("Digite um número válido.")
-        
-        elif opcao == "0":
-            print("Encerrando programa...")
-            break
-        else:
-            print("Opção inválida. Tente novamente.")
+                print("⚠️ Por favor, insira um número válido.")
+
 
 if __name__ == "__main__":
     executar()

@@ -61,18 +61,24 @@ class GerenciadorDeTarefas:
 
     def editar_tarefa(self, indice, nova_descricao):
         """
-        Atualiza a descrição de uma tarefa existente.
+        Atualiza a descrição de uma tarefa, com confirmação do usuário.
         Parâmetros:
-            - indice (int) - Posição da tarefa(començando em 1).
-            - nova_descrição(str) - Texto atualizado para a tarefa.
+            - indice (int): Índice da tarefa (começando em 1)
+            - nova_descricao (str): Texto atualizado
         """
-        indice -= 1 # Ajusta para índice interno da lista
+        indice -= 1
         if 0 <= indice < len(self.tarefas):
-            self.tarefas[indice]["descrição"] = nova_descricao
-            salvar_tarefas(self.tarefas) #Atualiza o arquivo com as tarefas
-            print("Tarefa atualizada!")
+            tarefa = self.tarefas[indice]
+            print(f"Tarefa atual: \"{tarefa['descrição']}\" [Concluída: {tarefa     ['Concluída']}]")
+            confirmar = input(f"Deseja alterar para: \"{nova_descricao}\"? (s/n): ").strip().lower()
+            if confirmar == "s":
+                tarefa["descrição"] = nova_descricao
+                salvar_tarefas(self.tarefas)
+                print("✏️ Tarefa editada com sucesso!")
+            else:
+                print("🚫 Edição cancelada.")
         else:
-            print("Índice inválido. Não foi possível atualizar a tarefa.")
+            print("❌ Índice inválido. Nenhuma tarefa editada.")
 
     def excluir_tarefa(self, indice):
         """
