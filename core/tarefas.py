@@ -1,125 +1,151 @@
-from core.storage import salvar_tarefas, carregar_tarefas
-from core.utils import logger
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton, QLineEdit, QTextEdit
+from core.tarefas import GerenciadorDeTarefas
 
-
-class GerenciadorDeTarefas:
-    """
-    Classe responsável por gerenciar uma lista de tarefas.
-    Cada tarefa é representada como um dicionário com:
-        - 'descrição' (str)
-        - 'Concluída' (bool)
-    """
-
+class MainWindow(QMainWindow):
     def __init__(self):
-        """Inicializa a lista de tarefas vazia."""
-        self.tarefas = carregar_tarefas()
+        super().__init__()
+        self.setWindowTitle('Gerenciador de Tarefas')
+
+        self.gerenciador = GerenciadorDeTarefas()
+
+        # Layout principal
+        layout = QVBoxLayout()
+
+        # Campo de entrada
+        self.input_descricao = QLineEdit()
+        self.input_descricao.setPlaceholderText('Descrição da Tarefa')
+        layout.addWidget(self.input_descricao)
+
+        # Botões
+        btn_adicionar = QPushButton('Adicionar Tarefa')
+        btn_adicionar.clicked.connect(self.adicionar_tarefa)
+        layout.addWidget(btn_adicionar)
+
+        btn_listar = QPushButton('Listar Tarefas')
+        btn_listar.clicked.connect(self.listar_tarefas)
+        layout.addWidget(btn_listar)
+
+        # Área de saída
+        self.output = QTextEdit()
+        self.output.setReadOnly(True)
+        layout.addWidget(self.output)
+
+        # Widget central
+        central_widget = QWidget()
+        central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+    def adicionar_tarefa(self):
+        descricao = self.input_descricao.text()
+        self.gerenciador.adicionar_tarefa(descricao)
+        self.output.append(f'Tarefa "{descricao}" adicionada!')
+        self.input_descricao.clear()
 
     def listar_tarefas(self):
-        """
-        Exibe todas as tarefas cadastradas com status visual.
-        Se não houver tarefas, informa ao usuário.
-        """
-        print("\n📋 Tarefas:")
+        tarefas = self.gerenciador.listar_tarefas()
+        self.output.append(''.join(tarefas))
 
-        if not self.tarefas:
-            print("🕳️ Nenhuma tarefa cadastrada no momento.")
-            return
+if __name__ == '__main__':
+    app = QApplication([])
+    window = MainWindow()
+    window.show()
+    app.exec()
 
-        for i, tarefa in enumerate(self.tarefas, start=1):
-            try:
-                descricao = tarefa.get("descrição", "Sem descrição")
-                status = "✅ Concluída" if tarefa.get("Concluída", False) else "❌ Pendente"
-                print(f"{i}. {descricao} [{status}]")
-            except AttributeError:
-                print(f"{i}. ❌ ERRO: formato inesperado de tarefa.")
+import json
+import os
 
-    def buscar_tarefas(self, palavra_chave):
-        """
-        Exibe tarefas que contenham a palavra-chave fornecida.
-        Parâmetro:
-        - Palavra_chave (str): termo a ser pesquisado na descrição.
-        """
-        termo = palavra_chave.strip().lower()
-        if not termo:
-            print("⚠️ Nenhuma palavra-chave foi fornecida.")
-            return
-        
-        resultados = [
-            (i + 1, tarefa) for i, tarefa in enumerate(self.tarefas) if termo in tarefa.get("descrição", "").lower()
-        ]
-        
-        if resultados:
-            print(f"\n🔍 Resultados para \"{palavra_chave}\":")
-            for i, tarefa in resultados:
-                status = "✅ Concluída" if tarefa.get("Concluída", False) else "❌ Pendente"
-                print(f"{i}. {tarefa['descrição']} [{status}]")
+# Caminho absoluto até a pasta /data (um nível acima de /core)
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+ARQUIVO = os.path.join(DATA_DIR, 'tarefas.json')
+
+# Garante que a pasta /data existe
+os.makedirs(DATA_DIR, exist_ok=True)
+
+def salvar_tarefas(tarefas):
+    """Salvar a lista de tarefas em formato JSON."""
+    with open(ARQUIVO, 'w', encoding='utf-8') as arquivo:
+        json.dump(tarefas, arquivo, ensure_ascii=False, indent=4)
+
+def carregar_tarefas():
+    """Carregar as tarefas do arquivo JSON, se existir."""
+    if os.path.exists(ARQUIVO):
+        with open(ARQUIVO, 'r', encoding='utf-8') as arquivo:
+            return json.load(arquivo)
+    return []
+
+import logging
+from core.storage import salvar_tarefas, carregar_tarefas
+
+# Configuração do logger
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+class GerenciadorDeTarefas:
+    def __init__(self):
+        try:
+            self.tarefas = carregar_tarefas()
+            logger.info('Tarefas carregadas com sucesso.')
+        except Exception as e:
+            logger.error(f'Erro ao carregar tarefas: {e}')
+            self.tarefas = []
 
     def adicionar_tarefa(self, descricao):
-        """Adiciona uma nova tarefa à lista."""
-        self.tarefas.append({"descrição": descricao, "Concluída": False})
-        salvar_tarefas(self.tarefas)
-        logger.info("Nova tarefa adicionada: %s", descricao)
-        print("✅ Tarefa adicionada!")
+        try:
+            if not descricao:
+                raise ValueError('Descrição da tarefa não pode ser vazia.')
+            self.tarefas.append({'descricao': descricao, 'concluida': False})
+            salvar_tarefas(self.tarefas)
+            logger.info(f'Tarefa adicionada: {descricao}')
+        except ValueError as ve:
+            logger.warning(f'Tentativa de adicionar tarefa inválida: {ve}')
+        except Exception as e:
+            logger.error(f'Erro ao adicionar tarefa: {e}')
 
-    def concluir_tarefa(self, indice):
-        """
-        Marca uma tarefa como concluída, após confirmação.
-        Parâmetro:
-        - indice (int): Índice da tarefa (começando em 1)
-        """
-        indice -= 1
-        if 0 <= indice < len(self.tarefas):
-            tarefa = self.tarefas[indice]
-            print(f"Tarefa selecionada: {tarefa['descrição']} [Concluída: {tarefa['Concluída']}]")
-            confirmar = input("Deseja marcar como concluída? (s/n): ").strip().lower()
-            if confirmar == "s":
-                tarefa["Concluída"] = True
-                salvar_tarefas(self.tarefas)
-                print("✅ Tarefa marcada como concluída!")
-            else:
-                print("🚫 Ação cancelada. Tarefa não foi modificada.")
-        else:
-            print("❌ Índice inválido. Tarefa inexistente.")
+    def listar_tarefas(self):
+        return [f'{"[X]" if t["concluida"] else "[ ]"} {t["descricao"]}' for t in self.tarefas]
 
+    def buscar_tarefa(self, palavra_chave):
+        try:
+            resultados = [t for t in self.tarefas if palavra_chave.lower() in t['descricao'].lower()]
+            logger.info(f'Busca realizada por palavra-chave: {palavra_chave}')
+            return resultados
+        except Exception as e:
+            logger.error(f'Erro ao buscar tarefa: {e}')
+            return []
 
-    def editar_tarefa(self, indice, nova_descricao):
-        """
-        Atualiza a descrição de uma tarefa, com confirmação do usuário.
-        Parâmetros:
-            - indice (int): Índice da tarefa (começando em 1)
-            - nova_descricao (str): Texto atualizado
-        """
-        indice -= 1
-        if 0 <= indice < len(self.tarefas):
-            tarefa = self.tarefas[indice]
-            print(f"Tarefa atual: \"{tarefa['descrição']}\" [Concluída: {tarefa     ['Concluída']}]")
-            confirmar = input(f"Deseja alterar para: \"{nova_descricao}\"? (s/n): ").strip().lower()
-            if confirmar == "s":
-                tarefa["descrição"] = nova_descricao
-                salvar_tarefas(self.tarefas)
-                print("✏️ Tarefa editada com sucesso!")
-            else:
-                print("🚫 Edição cancelada.")
-        else:
-            print("❌ Índice inválido. Nenhuma tarefa editada.")
+    def concluir_tarefa(self, descricao):
+        try:
+            for tarefa in self.tarefas:
+                if tarefa['descricao'] == descricao:
+                    tarefa['concluida'] = True
+                    salvar_tarefas(self.tarefas)
+                    logger.info(f'Tarefa concluída: {descricao}')
+                    return
+            logger.warning(f'Tarefa não encontrada para conclusão: {descricao}')
+        except Exception as e:
+            logger.error(f'Erro ao concluir tarefa: {e}')
 
-    def excluir_tarefa(self, indice):
-        """
-        Remove uma tarefa da lista, com confirmação.
-        Parâmetro:
-        - indice (int): Posição da tarefa (começando em 1)
-        """
-        indice -= 1
-        if 0 <= indice < len(self.tarefas):
-            tarefa = self.tarefas[indice]
-            print(f"Tarefa selecionada: {tarefa['descrição']} [Concluída: {tarefa['Concluída']}]")
-            confirmar = input("Tem certeza que deseja excluir essa tarefa? (s/n): ").strip().lower()
-            if confirmar == "s":
-                del self.tarefas[indice]
-                salvar_tarefas(self.tarefas)
-                print("🗑️ Tarefa excluída com sucesso.")
-            else:
-                print("🚫 Exclusão cancelada. Nenhuma tarefa foi removida.")
-        else:
-            print("❌ Índice inválido. Tarefa inexistente.")
+    def editar_tarefa(self, descricao_antiga, descricao_nova):
+        try:
+            for tarefa in self.tarefas:
+                if tarefa['descricao'] == descricao_antiga:
+                    tarefa['descricao'] = descricao_nova
+                    salvar_tarefas(self.tarefas)
+                    logger.info(f'Tarefa editada: {descricao_antiga} -> {descricao_nova}')
+                    return
+            logger.warning(f'Tarefa não encontrada para edição: {descricao_antiga}')
+        except Exception as e:
+            logger.error(f'Erro ao editar tarefa: {e}')
 
+    def excluir_tarefa(self, descricao):
+        try:
+            confirmacao = input(f'Tem certeza que deseja excluir a tarefa "{descricao}"? (s/n): ').strip().lower()
+            if confirmacao != 's':
+                logger.info(f'Exclusão de tarefa cancelada pelo usuário: {descricao}')
+                return
+            self.tarefas = [t for t in self.tarefas if t['descricao'] != descricao]
+            salvar_tarefas(self.tarefas)
+            logger.info(f'Tarefa excluída: {descricao}')
+        except Exception as e:
+            logger.error(f'Erro ao excluir tarefa: {e}')
